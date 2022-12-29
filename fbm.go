@@ -9,34 +9,56 @@ type fbmNoise struct {
 	lacunarity  float64
 }
 
-type evalFunc func(frequency float64) float64
-
-func (f fbmNoise) apply(e evalFunc) float64 {
-	sample := 0.0
-	for o := 1.0; o <= float64(f.octaves); o++ {
-		gain := f.persistence * o
-		freq := o * f.lacunarity * f.frequency
-		sample += e(freq) * gain
-	}
-	return sample
-}
-
 func (f fbmNoise) Eval2(x, y float64) float64 {
-	return f.apply(func(freq float64) float64 {
-		return f.source.Eval2(x/freq, y/freq)
-	})
+	persistence := 1.0
+	x *= f.frequency
+	y *= f.frequency
+	var signal, v float64
+	for o := 0; o < f.octaves; o++ {
+		signal = f.source.Eval2(x, y)
+		v += signal * persistence
+		x *= f.lacunarity
+		y *= f.lacunarity
+		persistence *= f.persistence
+	}
+	return v
 }
 
 func (f fbmNoise) Eval3(x, y, z float64) float64 {
-	return f.apply(func(freq float64) float64 {
-		return f.source.Eval3(x/freq, y/freq, z/freq)
-	})
+	persistence := 1.0
+	x *= f.frequency
+	y *= f.frequency
+	z *= f.frequency
+	var signal, v float64
+	for o := 0; o < f.octaves; o++ {
+		signal = f.source.Eval3(x, y, z)
+		v += signal * persistence
+		x *= f.lacunarity
+		y *= f.lacunarity
+		z *= f.frequency
+		persistence *= f.persistence
+	}
+	return v
 }
 
 func (f fbmNoise) Eval4(x, y, z, w float64) float64 {
-	return f.apply(func(freq float64) float64 {
-		return f.source.Eval4(x/freq, y/freq, z/freq, w/freq)
-	})
+	persistence := 1.0
+	x *= f.frequency
+	y *= f.frequency
+	z *= f.frequency
+	w *= f.frequency
+	var signal, v float64
+	for o := 0; o < f.octaves; o++ {
+		signal = f.source.Eval4(x, y, z, w)
+		v += signal * persistence
+
+		x *= f.lacunarity
+		y *= f.lacunarity
+		z *= f.frequency
+		w *= f.frequency
+		persistence *= f.persistence
+	}
+	return v
 }
 
 // NewFbmNoise creates a new FBM Noise function using an input Noise interface.

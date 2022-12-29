@@ -12,7 +12,7 @@ type noise struct {
 	permGradIndex3D []int16
 }
 
-// Returns a random noise value in two dimensions. Repeated calls with the same
+// Eval2 returns a random noise value in two dimensions. Repeated calls with the same
 // x/y inputs will have the same output.
 func (s *noise) Eval2(x, y float64) float64 {
 	// Place input coordinates onto grid.
@@ -127,7 +127,7 @@ func (s *noise) Eval2(x, y float64) float64 {
 	return value / normConstant2D
 }
 
-// Returns a random noise value in three dimensions.
+// Eval3 returns a random noise value in three dimensions.
 func (s *noise) Eval3(x, y, z float64) float64 {
 	// Place input coordinates on simplectic honeycomb.
 	stretchOffset := (x + y + z) * stretchConstant3D
@@ -714,7 +714,7 @@ func (s *noise) Eval3(x, y, z float64) float64 {
 	return value / normConstant3D
 }
 
-// Returns a random noise value in four dimensions.
+// Eval4 returns a random noise value in four dimensions.
 func (s *noise) Eval4(x, y, z, w float64) float64 {
 	// Place input coordinates on simplectic honeycomb.
 	stretchOffset := (x + y + z + w) * stretchConstant4D

@@ -1,4 +1,4 @@
-// opensimplex is a Go implementation of Kurt Spencer's patent-free alternative
+// Package opensimplex is a Go implementation of Kurt Spencer's patent-free alternative
 // to Perlin and Simplex noise.
 //
 // Given a seed, it generates smoothly-changing deterministic random values in
@@ -18,21 +18,21 @@ package opensimplex
  * Based on Java v1.1 (October 5, 2014)
  */
 
-// A seeded 64-bit noise instance
+// Noise presents an interface for accessing a seeded noise generator in 2, 3, or 4 dimensions
 type Noise interface {
 	Eval2(x, y float64) float64
 	Eval3(x, y, z float64) float64
 	Eval4(x, y, z, w float64) float64
 }
 
-// A seeded 32-bit noise instance
+// Noise32 presents an interface for accessing a seeded 32-bit noise generator in 2, 3, or 4 dimensions
 type Noise32 interface {
 	Eval2(x, y float32) float32
 	Eval3(x, y, z float32) float32
 	Eval4(x, y, z, w float32) float32
 }
 
-// Construct a Noise instance with a 64-bit seed. Two Noise instances with the
+// New constructs a Noise instance with a 64-bit seed. Two Noise instances with the
 // same seed will have the same output.
 func New(seed int64) Noise {
 	s := &noise{
@@ -63,20 +63,20 @@ func New(seed int64) Noise {
 	return s
 }
 
-// Construct a Noise32 instance with a 64-bit seed. Two Noise32 instances with the
+// New32 constructs a Noise32 instance with a 64-bit seed. Two Noise32 instances with the
 // same seed will have the same output.
 func New32(seed int64) Noise32 {
 	return &cast32Noise{base: New(seed)}
 }
 
-// Construct a normalized Noise instance with a 64-bit seed. Eval methods will
+// NewNormalized constructs a normalized Noise instance with a 64-bit seed. Eval methods will
 // return values in [0, 1). Two Noise instances with the same seed will have
 // the same output.
 func NewNormalized(seed int64) Noise {
 	return &normNoise{base: New(seed)}
 }
 
-// Construct a normalized Noise32 instance with a 64-bit seed. Eval methods will
+// NewNormalized32 constructs a normalized Noise32 instance with a 64-bit seed. Eval methods will
 // return values in [0, 1). Two Noise32 instances with the same seed will have
 // the same output.
 func NewNormalized32(seed int64) Noise32 {
